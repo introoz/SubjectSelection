@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SubjectSelection.Models
 {
-    public class SubjectSelectionDbContext : DbContext
+    public class SubjectSelectionDbContext : IdentityDbContext<User, ApplicationRole, int>//DbContext
     {
         public SubjectSelectionDbContext(DbContextOptions<SubjectSelectionDbContext> options)
             : base(options)
@@ -14,6 +15,8 @@ namespace SubjectSelection.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ExclusiveSubjectLists>()
                 .HasOne(s => s.SubjectListA)
                 .WithMany(sl => sl.ExclusiveSubjectListsA)
@@ -62,6 +65,8 @@ namespace SubjectSelection.Models
                 .HasForeignKey(ug => ug.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.Id);
             //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             //{
             //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
@@ -74,7 +79,7 @@ namespace SubjectSelection.Models
         public DbSet<Group> Groups { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<SubjectList> SubjectLists { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
 
 
         public DbSet<UserGroups> UserGroups { get; set; }

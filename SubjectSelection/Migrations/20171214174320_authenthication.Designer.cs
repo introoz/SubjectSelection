@@ -11,9 +11,10 @@ using System;
 namespace SubjectSelection.Migrations
 {
     [DbContext(typeof(SubjectSelectionDbContext))]
-    partial class SubjectSelectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171214174320_authenthication")]
+    partial class authenthication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
