@@ -1,0 +1,170 @@
+﻿@model IEnumerable<SubjectSelection.Models.Subject>
+
+@{
+    ViewData["Title"] = ViewBag.parentListName;//"Index";
+    var parentList = ViewBag.parentList;
+    var currentUserId = ViewBag.currentUserId;
+    List<int> usersWhoCanEdit = ViewBag.usersWhoCanEdit;
+}
+
+<h2>@ViewBag.parentListName</h2>
+
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+
+@*<div class="row">
+        <div class="col-md-12">
+            <form asp-action="CreateSubject" asp-route-parentListId="@parentListId">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="subjectName">Subject Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="subjectDescription">Subject Description</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="subjectName" placeholder="Enter name" name="subjectName" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input type="text" class="form-control" id="subjectDescription" placeholder="Enter description" name="subjectDescription" />
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-md-6">
+        <div class="@(usersWhoCanEdit.Contains(currentUserId) ? string.Empty : "hidden") row">
+            <div class="col-md-12">
+                <form asp-action="CreateSubject" asp-route-parentListId="@parentList.SubjectListId">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="subjectName">Subject Name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="subjectDescription">Subject Description</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="subjectName" placeholder="Enter name" name="subjectName" />
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="subjectDescription" placeholder="Enter description" name="subjectDescription" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Subjects:
+                <table class="table" style="table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentList)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr style="word-wrap: break-word">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td >
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ParentList.Name)
+                            </td>
+                            <td class="@(usersWhoCanEdit.Contains(currentUserId)? string.Empty : "hidden")">
+                                <a asp-controller="Groups" asp-action="Index" asp-route-parentSubjectId="@item.SubjectId">Details</a> |
+                                <a asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.SubjectId">Delete</a>
+                            </td>
+                            <td class="@(!usersWhoCanEdit.Contains(currentUserId) ? string.Empty : "hidden")">
+                                <a asp-controller="Groups" asp-action="Index" asp-route-parentSubjectId="@item.SubjectId">Details</a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                @await Component.InvokeAsync("UsersWhoCanEdit", new { parentListId = parentList.SubjectListId })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Exclusive lists:
+                @await Component.InvokeAsync("ExclusiveLists", new { parentListId = parentList.SubjectListId })
+                <div class="@(currentUserId == parentList.OwnerId ? string.Empty : "hidden")">
+                    <form asp-action="AddExlusiveList" asp-route-parentListId="@parentList.SubjectListId">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    @Html.DropDownList("subjectListId", ViewBag.subjectLists as SelectList, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row">
+        <div class="col-md-12">
+            @await Component.InvokeAsync("ExclusiveLists", new { parentListId = parentListId })
+            <form asp-action="AddExlusiveList" asp-route-parentListId="@parentListId">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DropDownList("subjectListId", ViewBag.subjectLists as SelectList, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>*@

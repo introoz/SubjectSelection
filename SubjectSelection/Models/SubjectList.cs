@@ -12,6 +12,8 @@ namespace SubjectSelection.Models
         public int OwnerId { get; set; }
         public User Owner { get; set; }
 
+        public string Name { get; set; }
+
         public ICollection<Subject> Subjects { get; set; }
 
         public ICollection<ExclusiveSubjectLists> ExclusiveSubjectListsA { get; set; }

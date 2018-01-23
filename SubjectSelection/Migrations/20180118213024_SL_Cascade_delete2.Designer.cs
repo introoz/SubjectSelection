@@ -11,9 +11,10 @@ using System;
 namespace SubjectSelection.Migrations
 {
     [DbContext(typeof(SubjectSelectionDbContext))]
-    partial class SubjectSelectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180118213024_SL_Cascade_delete2")]
+    partial class SL_Cascade_delete2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -422,7 +423,7 @@ namespace SubjectSelection.Migrations
                     b.HasOne("SubjectSelection.Models.User", "User")
                         .WithMany("UserGroups")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

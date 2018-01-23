@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SubjectSelection.Models;
 
 namespace SubjectSelection.Models
 {
@@ -57,16 +58,28 @@ namespace SubjectSelection.Models
                 .HasOne(ug => ug.User)
                 .WithMany(u => u.UserGroups)
                 .HasForeignKey(ug => ug.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserGroups>()
                 .HasOne(ug => ug.Group)
                 .WithMany(g => g.UsersInGroup)
                 .HasForeignKey(ug => ug.GroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
+
+            modelBuilder.Entity<Subject>()
+                .HasOne(s => s.ParentList)
+                .WithMany(sl => sl.Subjects)
+                .HasForeignKey(s => s.ParentListId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.Subject)
+                .WithMany(s => s.Groups)
+                .HasForeignKey(g => g.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
             //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             //{
             //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
@@ -86,5 +99,6 @@ namespace SubjectSelection.Models
         public DbSet<UserEditableSubjects> UserEditableSubjects { get; set; }
         public DbSet<UserEditableLists> UserEditableLists { get; set; }
         public DbSet<ExclusiveSubjectLists> ExclusiveSubjectLists { get; set; }
+        public DbSet<SubjectSelection.Models.User> User { get; set; }
     }
 }

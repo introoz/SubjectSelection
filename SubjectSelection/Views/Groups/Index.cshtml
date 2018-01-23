@@ -1,0 +1,90 @@
+﻿@model IEnumerable<SubjectSelection.Models.Group>
+@{
+    ViewData["Title"] = "Index";
+    var parentSubjectName = ViewBag.parentSubjectName;
+    var parentSubjectId = ViewBag.parentSubjectId;
+    var usersWhoCanEdit = ViewBag.usersWhoCanEdit;
+    var currentUserId = ViewBag.currentUserId;
+}
+
+<h2>@ViewBag.parentSubjectName</h2>
+
+<form asp-action="CreateGroup" asp-route-parentSubjectId="@ViewBag.parentSubjectId" class="@(usersWhoCanEdit.Contains(currentUserId) ? string.Empty : "hidden")">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="groupName">Group Name</label>
+            </div>
+            <div class="col-md-6">
+                <label for="groupCapacity">Group capacity</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="groupName" placeholder="Enter name" name="groupName" />
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-11">
+                        <input type="number" class="form-control" id="groupCapacity" placeholder="Enter group capacity" name="groupCapacity" />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Capacity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Description
+                @*@Html.DisplayNameFor(model => model.ClassDate)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.SubjectId)
+                </td>
+                <td>
+                    <a asp-action="Join" asp-route-groupId="@item.GroupId" asp-route-parentSubjectId="@ViewBag.parentSubjectId">Join</a> 
+                    <span class="@(usersWhoCanEdit.Contains(currentUserId) ? string.Empty : "hidden")">
+                        |
+                        <a asp-action="Edit" asp-route-id="@item.GroupId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.GroupId">Delete</a>
+                    </span>
+                    
+                </td>
+            </tr>
+            <tr>
+                @await Component.InvokeAsync("UsersInGroup", new { groupId = item.GroupId })
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,39 @@
+﻿@model SubjectSelection.Models.Subject
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Subject</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ParentList)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ParentList.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="SubjectId" />
+        <input type="submit" value="Delete" asp-route-parentListId="@Model.ParentListId" class="btn btn-default" /> |
+        <a asp-action="Index" asp-route-parentListId="@Model.ParentListId">Back to List</a>
+    </form>
+</div>

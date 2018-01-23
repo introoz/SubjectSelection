@@ -26,6 +26,11 @@
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="StudentCardId"></label>
+                <input asp-for="StudentCardId" id="StudentCardId" class="form-control" />
+                <span asp-validation-for="StudentCardId" class="text-danger"></span>
+            </div>
             <button type="submit" class="btn btn-default">Register</button>
         </form>
     </div>
